@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 
@@ -20,7 +21,21 @@ function fraseAleatoria() {
 }
 
 const Frase = () => {
-  return <Text>{fraseAleatoria()}</Text>;
+  // https://legacy.reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often
+  const [frase, setFrase] = useState("");
+
+  useEffect(() => {
+    setFrase(_ => fraseAleatoria())
+
+    const interval = setInterval(() => {
+      setFrase(_ => fraseAleatoria())
+    }, 5000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
+  
+  return <Text>{frase}</Text>
 };
 
 export default function App() {
